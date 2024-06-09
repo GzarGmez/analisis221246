@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Analizador Léxico y Sintáctico</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='Style.css') }}">
+    <link rel="icon" href="https://yt3.googleusercontent.com/ytc/AIdro_mf_8EkwzsGbmw_w3w9jY_VUUxJFg8WBjn5OyBEbwirKg=s160-c-k-c0x00ffffff-no-rj">
+</head>
+<body>
+    <div class="container">
+        <h1>Analizador Léxico y Sintáctico</h1>
+        <form action="/" method="post">
+            <textarea name="codigo" rows="10" cols="50">{{ code }}</textarea><br>
+            <input type="submit" value="Analizar">
+        </form>
+    
+        {% if lexico %}
+        <h1>Resultado del Análisis Léxico</h1>
+        <table>
+            <tr>
+                <th>Token</th>
+                <th>Reservada</th>
+                <th>Identificador</th>
+                <th>Número</th>
+                <th>Símbolo</th>
+                <th>Paréntesis izquierdo</th>
+                <th>Paréntesis derecho</th>
+                <th>Llave izquierda</th>
+                <th>Llave derecha</th>
+            </tr>
+            {% for token in lexico['Reservada'] %}
+            <tr>
+                <td>{{ token }}</td>
+                <td>x</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            {% endfor %}
+            {% for token in lexico['Identificador'] %}
+            <tr>
+                <td>{{ token }}</td>
+                <td></td>
+                <td>x</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            {% endfor %}
+            {% for token in lexico['Número'] %}
+            <tr>
+                <td>{{ token }}</td>
+                <td></td>
+                <td></td>
+                <td>x</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            {% endfor %}
+            {% for token in lexico['Símbolo'] %}
+            <tr>
+                <td>{{ token }}</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>x</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            {% endfor %}
+            {% for token in lexico['Paréntesis izquierdo'] %}
+            <tr>
+                <td>{{ token }}</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>x</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            {% endfor %}
+            {% for token in lexico['Paréntesis derecho'] %}
+            <tr>
+                <td>{{ token }}</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>x</td>
+                <td></td>
+                <td></td>
+            </tr>
+            {% endfor %}
+            {% for token in lexico['Llave izquierda'] %}
+            <tr>
+                <td>{{ token }}</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>x</td>
+                <td></td>
+            </tr>
+            {% endfor %}
+            {% for token in lexico['Llave derecha'] %}
+            <tr>
+                <td>{{ token }}</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>x</td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% endif %}
+    
+        {% if sintactico %}
+        <h1>Resultado del Análisis Sintáctico</h1>
+        <pre>{{ sintactico }}</pre>
+        {% endif %}
+    </div>
+
+</body>
+</html>
