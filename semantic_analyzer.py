@@ -42,20 +42,32 @@ def p_error(p):
 # Construir el analizador sintáctico
 parser = yacc.yacc()
 
-# Función para analizar la sintaxis del código de entrada
-def analizar_sintaxis(data):
+# Función para realizar el análisis semántico
+def analizar_semantica(data):
     resultado_lexico = analizar_lexico(data)
-    #'const', 'return', 'div', 'h1', 'export', 'default'
-    palabras_reservadas_correctas = set([
-        'int','DO', 'ENDDO', 'WHILE', 'ENDWHILE'
-    ])
+    palabras_reservadas_correctas = set(['DO', 'ENDDO', 'WHILE', 'ENDWHILE'])
     palabras_reservadas_ingresadas = set(resultado_lexico['Reservada'])
-    
+
     palabras_reservadas_faltantes = palabras_reservadas_correctas.difference(palabras_reservadas_ingresadas)
-    
+
     if palabras_reservadas_faltantes:
         return f'Error: Faltan las siguientes palabras reservadas: {", ".join(palabras_reservadas_faltantes)}'
+
+    # Realizar análisis semántico adicional si es necesario
+    # Por ejemplo, verificar emparejamiento de palabras reservadas DO y WHILE
+    stack = []
+    for token in resultado_lexico['Reservada']:
+        if token == 'DO':
+            stack.append('DO')
+        elif token == 'WHILE':
+            if not stack or stack.pop() != 'DO':
+                return 'Error: Uso incorrecto de WHILE sin DO correspondiente'
     
-    parser = yacc.yacc()
-    parser.parse(data)
-    return "Análisis sintáctico exitoso"
+    if stack:
+        return 'Error: Uso incorrecto de DO sin WHILE correspondiente'
+    
+    return "Análisis semántico exitoso"
+
+# Función para analizar la sintaxis del código de entrada
+
+

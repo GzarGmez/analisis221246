@@ -2,70 +2,73 @@ Created by PLY version 3.11 (http://www.dabeaz.com/ply)
 
 Unused terminals:
 
-    COMMA
-    DIVIDE
-    MINUS
-    NUMBER
-    PLUS
-    SEMICOLON
-    TIMES
+    EQUALS
+    INT
+    RESERVED
+    STRING
 
 Grammar
 
 Rule 0     S' -> program
-Rule 1     program -> object_declaration
-Rule 2     object_declaration -> RESERVED IDENTIFIER LBRACE method_declaration RBRACE
-Rule 3     method_declaration -> RESERVED IDENTIFIER LPAREN args RPAREN COLON IDENTIFIER EQUALS block
-Rule 4     args -> IDENTIFIER COLON IDENTIFIER LBRACKET IDENTIFIER RBRACKET
-Rule 5     block -> LBRACE statements RBRACE
-Rule 6     statements -> statement
-Rule 7     statements -> statements statement
-Rule 8     statement -> RESERVED LPAREN STRING RPAREN
+Rule 1     program -> statement
+Rule 2     statement -> expression SEMICOLON
+Rule 3     statement -> IDENTIFIER LBRACE statement RBRACE
+Rule 4     expression -> expression PLUS expression
+Rule 5     expression -> expression MINUS expression
+Rule 6     expression -> expression TIMES expression
+Rule 7     expression -> expression DIVIDE expression
+Rule 8     expression -> LPAREN expression RPAREN
+Rule 9     expression -> NUMBER
+Rule 10    expression -> IDENTIFIER
 
 Terminals, with rules where they appear
 
-COLON                : 3 4
-COMMA                : 
-DIVIDE               : 
-EQUALS               : 3
-IDENTIFIER           : 2 3 3 4 4 4
-LBRACE               : 2 5
-LBRACKET             : 4
-LPAREN               : 3 8
-MINUS                : 
-NUMBER               : 
-PLUS                 : 
-RBRACE               : 2 5
-RBRACKET             : 4
-RESERVED             : 2 3 8
-RPAREN               : 3 8
-SEMICOLON            : 
-STRING               : 8
-TIMES                : 
+DIVIDE               : 7
+EQUALS               : 
+IDENTIFIER           : 3 10
+INT                  : 
+LBRACE               : 3
+LPAREN               : 8
+MINUS                : 5
+NUMBER               : 9
+PLUS                 : 4
+RBRACE               : 3
+RESERVED             : 
+RPAREN               : 8
+SEMICOLON            : 2
+STRING               : 
+TIMES                : 6
 error                : 
 
 Nonterminals, with rules where they appear
 
-args                 : 3
-block                : 3
-method_declaration   : 2
-object_declaration   : 1
+expression           : 2 4 4 5 5 6 6 7 7 8
 program              : 0
-statement            : 6 7
-statements           : 5 7
+statement            : 1 3
 
 Parsing method: LALR
 
 state 0
 
     (0) S' -> . program
-    (1) program -> . object_declaration
-    (2) object_declaration -> . RESERVED IDENTIFIER LBRACE method_declaration RBRACE
+    (1) program -> . statement
+    (2) statement -> . expression SEMICOLON
+    (3) statement -> . IDENTIFIER LBRACE statement RBRACE
+    (4) expression -> . expression PLUS expression
+    (5) expression -> . expression MINUS expression
+    (6) expression -> . expression TIMES expression
+    (7) expression -> . expression DIVIDE expression
+    (8) expression -> . LPAREN expression RPAREN
+    (9) expression -> . NUMBER
+    (10) expression -> . IDENTIFIER
 
-    RESERVED        shift and go to state 3
+    IDENTIFIER      shift and go to state 4
+    LPAREN          shift and go to state 5
+    NUMBER          shift and go to state 6
 
     program                        shift and go to state 1
-    object_declaration             shift and go to state 2
+    statement                      shift and go to state 2
+    expression                     shift and go to state 3
 
 state 1
 
@@ -75,228 +78,298 @@ state 1
 
 state 2
 
-    (1) program -> object_declaration .
+    (1) program -> statement .
 
-    $end            reduce using rule 1 (program -> object_declaration .)
+    $end            reduce using rule 1 (program -> statement .)
 
 
 state 3
 
-    (2) object_declaration -> RESERVED . IDENTIFIER LBRACE method_declaration RBRACE
+    (2) statement -> expression . SEMICOLON
+    (4) expression -> expression . PLUS expression
+    (5) expression -> expression . MINUS expression
+    (6) expression -> expression . TIMES expression
+    (7) expression -> expression . DIVIDE expression
 
-    IDENTIFIER      shift and go to state 4
+    SEMICOLON       shift and go to state 7
+    PLUS            shift and go to state 8
+    MINUS           shift and go to state 9
+    TIMES           shift and go to state 10
+    DIVIDE          shift and go to state 11
 
 
 state 4
 
-    (2) object_declaration -> RESERVED IDENTIFIER . LBRACE method_declaration RBRACE
+    (3) statement -> IDENTIFIER . LBRACE statement RBRACE
+    (10) expression -> IDENTIFIER .
 
-    LBRACE          shift and go to state 5
+    LBRACE          shift and go to state 12
+    SEMICOLON       reduce using rule 10 (expression -> IDENTIFIER .)
+    PLUS            reduce using rule 10 (expression -> IDENTIFIER .)
+    MINUS           reduce using rule 10 (expression -> IDENTIFIER .)
+    TIMES           reduce using rule 10 (expression -> IDENTIFIER .)
+    DIVIDE          reduce using rule 10 (expression -> IDENTIFIER .)
 
 
 state 5
 
-    (2) object_declaration -> RESERVED IDENTIFIER LBRACE . method_declaration RBRACE
-    (3) method_declaration -> . RESERVED IDENTIFIER LPAREN args RPAREN COLON IDENTIFIER EQUALS block
+    (8) expression -> LPAREN . expression RPAREN
+    (4) expression -> . expression PLUS expression
+    (5) expression -> . expression MINUS expression
+    (6) expression -> . expression TIMES expression
+    (7) expression -> . expression DIVIDE expression
+    (8) expression -> . LPAREN expression RPAREN
+    (9) expression -> . NUMBER
+    (10) expression -> . IDENTIFIER
 
-    RESERVED        shift and go to state 6
+    LPAREN          shift and go to state 5
+    NUMBER          shift and go to state 6
+    IDENTIFIER      shift and go to state 14
 
-    method_declaration             shift and go to state 7
+    expression                     shift and go to state 13
 
 state 6
 
-    (3) method_declaration -> RESERVED . IDENTIFIER LPAREN args RPAREN COLON IDENTIFIER EQUALS block
+    (9) expression -> NUMBER .
 
-    IDENTIFIER      shift and go to state 8
+    SEMICOLON       reduce using rule 9 (expression -> NUMBER .)
+    PLUS            reduce using rule 9 (expression -> NUMBER .)
+    MINUS           reduce using rule 9 (expression -> NUMBER .)
+    TIMES           reduce using rule 9 (expression -> NUMBER .)
+    DIVIDE          reduce using rule 9 (expression -> NUMBER .)
+    RPAREN          reduce using rule 9 (expression -> NUMBER .)
 
 
 state 7
 
-    (2) object_declaration -> RESERVED IDENTIFIER LBRACE method_declaration . RBRACE
+    (2) statement -> expression SEMICOLON .
 
-    RBRACE          shift and go to state 9
+    $end            reduce using rule 2 (statement -> expression SEMICOLON .)
+    RBRACE          reduce using rule 2 (statement -> expression SEMICOLON .)
 
 
 state 8
 
-    (3) method_declaration -> RESERVED IDENTIFIER . LPAREN args RPAREN COLON IDENTIFIER EQUALS block
+    (4) expression -> expression PLUS . expression
+    (4) expression -> . expression PLUS expression
+    (5) expression -> . expression MINUS expression
+    (6) expression -> . expression TIMES expression
+    (7) expression -> . expression DIVIDE expression
+    (8) expression -> . LPAREN expression RPAREN
+    (9) expression -> . NUMBER
+    (10) expression -> . IDENTIFIER
 
-    LPAREN          shift and go to state 10
+    LPAREN          shift and go to state 5
+    NUMBER          shift and go to state 6
+    IDENTIFIER      shift and go to state 14
 
+    expression                     shift and go to state 15
 
 state 9
 
-    (2) object_declaration -> RESERVED IDENTIFIER LBRACE method_declaration RBRACE .
+    (5) expression -> expression MINUS . expression
+    (4) expression -> . expression PLUS expression
+    (5) expression -> . expression MINUS expression
+    (6) expression -> . expression TIMES expression
+    (7) expression -> . expression DIVIDE expression
+    (8) expression -> . LPAREN expression RPAREN
+    (9) expression -> . NUMBER
+    (10) expression -> . IDENTIFIER
 
-    $end            reduce using rule 2 (object_declaration -> RESERVED IDENTIFIER LBRACE method_declaration RBRACE .)
+    LPAREN          shift and go to state 5
+    NUMBER          shift and go to state 6
+    IDENTIFIER      shift and go to state 14
 
+    expression                     shift and go to state 16
 
 state 10
 
-    (3) method_declaration -> RESERVED IDENTIFIER LPAREN . args RPAREN COLON IDENTIFIER EQUALS block
-    (4) args -> . IDENTIFIER COLON IDENTIFIER LBRACKET IDENTIFIER RBRACKET
+    (6) expression -> expression TIMES . expression
+    (4) expression -> . expression PLUS expression
+    (5) expression -> . expression MINUS expression
+    (6) expression -> . expression TIMES expression
+    (7) expression -> . expression DIVIDE expression
+    (8) expression -> . LPAREN expression RPAREN
+    (9) expression -> . NUMBER
+    (10) expression -> . IDENTIFIER
 
-    IDENTIFIER      shift and go to state 11
+    LPAREN          shift and go to state 5
+    NUMBER          shift and go to state 6
+    IDENTIFIER      shift and go to state 14
 
-    args                           shift and go to state 12
+    expression                     shift and go to state 17
 
 state 11
 
-    (4) args -> IDENTIFIER . COLON IDENTIFIER LBRACKET IDENTIFIER RBRACKET
+    (7) expression -> expression DIVIDE . expression
+    (4) expression -> . expression PLUS expression
+    (5) expression -> . expression MINUS expression
+    (6) expression -> . expression TIMES expression
+    (7) expression -> . expression DIVIDE expression
+    (8) expression -> . LPAREN expression RPAREN
+    (9) expression -> . NUMBER
+    (10) expression -> . IDENTIFIER
 
-    COLON           shift and go to state 13
+    LPAREN          shift and go to state 5
+    NUMBER          shift and go to state 6
+    IDENTIFIER      shift and go to state 14
 
+    expression                     shift and go to state 18
 
 state 12
 
-    (3) method_declaration -> RESERVED IDENTIFIER LPAREN args . RPAREN COLON IDENTIFIER EQUALS block
+    (3) statement -> IDENTIFIER LBRACE . statement RBRACE
+    (2) statement -> . expression SEMICOLON
+    (3) statement -> . IDENTIFIER LBRACE statement RBRACE
+    (4) expression -> . expression PLUS expression
+    (5) expression -> . expression MINUS expression
+    (6) expression -> . expression TIMES expression
+    (7) expression -> . expression DIVIDE expression
+    (8) expression -> . LPAREN expression RPAREN
+    (9) expression -> . NUMBER
+    (10) expression -> . IDENTIFIER
 
-    RPAREN          shift and go to state 14
+    IDENTIFIER      shift and go to state 4
+    LPAREN          shift and go to state 5
+    NUMBER          shift and go to state 6
 
+    statement                      shift and go to state 19
+    expression                     shift and go to state 3
 
 state 13
 
-    (4) args -> IDENTIFIER COLON . IDENTIFIER LBRACKET IDENTIFIER RBRACKET
+    (8) expression -> LPAREN expression . RPAREN
+    (4) expression -> expression . PLUS expression
+    (5) expression -> expression . MINUS expression
+    (6) expression -> expression . TIMES expression
+    (7) expression -> expression . DIVIDE expression
 
-    IDENTIFIER      shift and go to state 15
+    RPAREN          shift and go to state 20
+    PLUS            shift and go to state 8
+    MINUS           shift and go to state 9
+    TIMES           shift and go to state 10
+    DIVIDE          shift and go to state 11
 
 
 state 14
 
-    (3) method_declaration -> RESERVED IDENTIFIER LPAREN args RPAREN . COLON IDENTIFIER EQUALS block
+    (10) expression -> IDENTIFIER .
 
-    COLON           shift and go to state 16
+    RPAREN          reduce using rule 10 (expression -> IDENTIFIER .)
+    PLUS            reduce using rule 10 (expression -> IDENTIFIER .)
+    MINUS           reduce using rule 10 (expression -> IDENTIFIER .)
+    TIMES           reduce using rule 10 (expression -> IDENTIFIER .)
+    DIVIDE          reduce using rule 10 (expression -> IDENTIFIER .)
+    SEMICOLON       reduce using rule 10 (expression -> IDENTIFIER .)
 
 
 state 15
 
-    (4) args -> IDENTIFIER COLON IDENTIFIER . LBRACKET IDENTIFIER RBRACKET
+    (4) expression -> expression PLUS expression .
+    (4) expression -> expression . PLUS expression
+    (5) expression -> expression . MINUS expression
+    (6) expression -> expression . TIMES expression
+    (7) expression -> expression . DIVIDE expression
 
-    LBRACKET        shift and go to state 17
+    SEMICOLON       reduce using rule 4 (expression -> expression PLUS expression .)
+    PLUS            reduce using rule 4 (expression -> expression PLUS expression .)
+    MINUS           reduce using rule 4 (expression -> expression PLUS expression .)
+    RPAREN          reduce using rule 4 (expression -> expression PLUS expression .)
+    TIMES           shift and go to state 10
+    DIVIDE          shift and go to state 11
+
+  ! TIMES           [ reduce using rule 4 (expression -> expression PLUS expression .) ]
+  ! DIVIDE          [ reduce using rule 4 (expression -> expression PLUS expression .) ]
+  ! PLUS            [ shift and go to state 8 ]
+  ! MINUS           [ shift and go to state 9 ]
 
 
 state 16
 
-    (3) method_declaration -> RESERVED IDENTIFIER LPAREN args RPAREN COLON . IDENTIFIER EQUALS block
+    (5) expression -> expression MINUS expression .
+    (4) expression -> expression . PLUS expression
+    (5) expression -> expression . MINUS expression
+    (6) expression -> expression . TIMES expression
+    (7) expression -> expression . DIVIDE expression
 
-    IDENTIFIER      shift and go to state 18
+    SEMICOLON       reduce using rule 5 (expression -> expression MINUS expression .)
+    PLUS            reduce using rule 5 (expression -> expression MINUS expression .)
+    MINUS           reduce using rule 5 (expression -> expression MINUS expression .)
+    RPAREN          reduce using rule 5 (expression -> expression MINUS expression .)
+    TIMES           shift and go to state 10
+    DIVIDE          shift and go to state 11
+
+  ! TIMES           [ reduce using rule 5 (expression -> expression MINUS expression .) ]
+  ! DIVIDE          [ reduce using rule 5 (expression -> expression MINUS expression .) ]
+  ! PLUS            [ shift and go to state 8 ]
+  ! MINUS           [ shift and go to state 9 ]
 
 
 state 17
 
-    (4) args -> IDENTIFIER COLON IDENTIFIER LBRACKET . IDENTIFIER RBRACKET
+    (6) expression -> expression TIMES expression .
+    (4) expression -> expression . PLUS expression
+    (5) expression -> expression . MINUS expression
+    (6) expression -> expression . TIMES expression
+    (7) expression -> expression . DIVIDE expression
 
-    IDENTIFIER      shift and go to state 19
+    SEMICOLON       reduce using rule 6 (expression -> expression TIMES expression .)
+    PLUS            reduce using rule 6 (expression -> expression TIMES expression .)
+    MINUS           reduce using rule 6 (expression -> expression TIMES expression .)
+    TIMES           reduce using rule 6 (expression -> expression TIMES expression .)
+    DIVIDE          reduce using rule 6 (expression -> expression TIMES expression .)
+    RPAREN          reduce using rule 6 (expression -> expression TIMES expression .)
+
+  ! PLUS            [ shift and go to state 8 ]
+  ! MINUS           [ shift and go to state 9 ]
+  ! TIMES           [ shift and go to state 10 ]
+  ! DIVIDE          [ shift and go to state 11 ]
 
 
 state 18
 
-    (3) method_declaration -> RESERVED IDENTIFIER LPAREN args RPAREN COLON IDENTIFIER . EQUALS block
+    (7) expression -> expression DIVIDE expression .
+    (4) expression -> expression . PLUS expression
+    (5) expression -> expression . MINUS expression
+    (6) expression -> expression . TIMES expression
+    (7) expression -> expression . DIVIDE expression
 
-    EQUALS          shift and go to state 20
+    SEMICOLON       reduce using rule 7 (expression -> expression DIVIDE expression .)
+    PLUS            reduce using rule 7 (expression -> expression DIVIDE expression .)
+    MINUS           reduce using rule 7 (expression -> expression DIVIDE expression .)
+    TIMES           reduce using rule 7 (expression -> expression DIVIDE expression .)
+    DIVIDE          reduce using rule 7 (expression -> expression DIVIDE expression .)
+    RPAREN          reduce using rule 7 (expression -> expression DIVIDE expression .)
+
+  ! PLUS            [ shift and go to state 8 ]
+  ! MINUS           [ shift and go to state 9 ]
+  ! TIMES           [ shift and go to state 10 ]
+  ! DIVIDE          [ shift and go to state 11 ]
 
 
 state 19
 
-    (4) args -> IDENTIFIER COLON IDENTIFIER LBRACKET IDENTIFIER . RBRACKET
+    (3) statement -> IDENTIFIER LBRACE statement . RBRACE
 
-    RBRACKET        shift and go to state 21
+    RBRACE          shift and go to state 21
 
 
 state 20
 
-    (3) method_declaration -> RESERVED IDENTIFIER LPAREN args RPAREN COLON IDENTIFIER EQUALS . block
-    (5) block -> . LBRACE statements RBRACE
+    (8) expression -> LPAREN expression RPAREN .
 
-    LBRACE          shift and go to state 23
+    SEMICOLON       reduce using rule 8 (expression -> LPAREN expression RPAREN .)
+    PLUS            reduce using rule 8 (expression -> LPAREN expression RPAREN .)
+    MINUS           reduce using rule 8 (expression -> LPAREN expression RPAREN .)
+    TIMES           reduce using rule 8 (expression -> LPAREN expression RPAREN .)
+    DIVIDE          reduce using rule 8 (expression -> LPAREN expression RPAREN .)
+    RPAREN          reduce using rule 8 (expression -> LPAREN expression RPAREN .)
 
-    block                          shift and go to state 22
 
 state 21
 
-    (4) args -> IDENTIFIER COLON IDENTIFIER LBRACKET IDENTIFIER RBRACKET .
+    (3) statement -> IDENTIFIER LBRACE statement RBRACE .
 
-    RPAREN          reduce using rule 4 (args -> IDENTIFIER COLON IDENTIFIER LBRACKET IDENTIFIER RBRACKET .)
-
-
-state 22
-
-    (3) method_declaration -> RESERVED IDENTIFIER LPAREN args RPAREN COLON IDENTIFIER EQUALS block .
-
-    RBRACE          reduce using rule 3 (method_declaration -> RESERVED IDENTIFIER LPAREN args RPAREN COLON IDENTIFIER EQUALS block .)
-
-
-state 23
-
-    (5) block -> LBRACE . statements RBRACE
-    (6) statements -> . statement
-    (7) statements -> . statements statement
-    (8) statement -> . RESERVED LPAREN STRING RPAREN
-
-    RESERVED        shift and go to state 26
-
-    statements                     shift and go to state 24
-    statement                      shift and go to state 25
-
-state 24
-
-    (5) block -> LBRACE statements . RBRACE
-    (7) statements -> statements . statement
-    (8) statement -> . RESERVED LPAREN STRING RPAREN
-
-    RBRACE          shift and go to state 27
-    RESERVED        shift and go to state 26
-
-    statement                      shift and go to state 28
-
-state 25
-
-    (6) statements -> statement .
-
-    RBRACE          reduce using rule 6 (statements -> statement .)
-    RESERVED        reduce using rule 6 (statements -> statement .)
-
-
-state 26
-
-    (8) statement -> RESERVED . LPAREN STRING RPAREN
-
-    LPAREN          shift and go to state 29
-
-
-state 27
-
-    (5) block -> LBRACE statements RBRACE .
-
-    RBRACE          reduce using rule 5 (block -> LBRACE statements RBRACE .)
-
-
-state 28
-
-    (7) statements -> statements statement .
-
-    RBRACE          reduce using rule 7 (statements -> statements statement .)
-    RESERVED        reduce using rule 7 (statements -> statements statement .)
-
-
-state 29
-
-    (8) statement -> RESERVED LPAREN . STRING RPAREN
-
-    STRING          shift and go to state 30
-
-
-state 30
-
-    (8) statement -> RESERVED LPAREN STRING . RPAREN
-
-    RPAREN          shift and go to state 31
-
-
-state 31
-
-    (8) statement -> RESERVED LPAREN STRING RPAREN .
-
-    RBRACE          reduce using rule 8 (statement -> RESERVED LPAREN STRING RPAREN .)
-    RESERVED        reduce using rule 8 (statement -> RESERVED LPAREN STRING RPAREN .)
+    $end            reduce using rule 3 (statement -> IDENTIFIER LBRACE statement RBRACE .)
+    RBRACE          reduce using rule 3 (statement -> IDENTIFIER LBRACE statement RBRACE .)
 

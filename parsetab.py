@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'leftPLUSMINUSleftTIMESDIVIDECOLON COMMA DIVIDE EQUALS IDENTIFIER LBRACE LBRACKET LPAREN MINUS NUMBER PLUS RBRACE RBRACKET RESERVED RPAREN SEMICOLON STRING TIMESprogram : object_declarationobject_declaration : RESERVED IDENTIFIER LBRACE method_declaration RBRACEmethod_declaration : RESERVED IDENTIFIER LPAREN args RPAREN COLON IDENTIFIER EQUALS blockargs : IDENTIFIER COLON IDENTIFIER LBRACKET IDENTIFIER RBRACKETblock : LBRACE statements RBRACEstatements : statement\n                  | statements statementstatement : RESERVED LPAREN STRING RPAREN'
+_lr_signature = 'leftPLUSMINUSleftTIMESDIVIDEDIVIDE EQUALS IDENTIFIER INT LBRACE LPAREN MINUS NUMBER PLUS RBRACE RESERVED RPAREN SEMICOLON STRING TIMESprogram : statementstatement : expression SEMICOLON\n                 | IDENTIFIER LBRACE statement RBRACEexpression : expression PLUS expression\n                  | expression MINUS expression\n                  | expression TIMES expression\n                  | expression DIVIDE expressionexpression : LPAREN expression RPARENexpression : NUMBERexpression : IDENTIFIER'
     
-_lr_action_items = {'RESERVED':([0,5,23,24,25,28,31,],[3,6,26,26,-6,-7,-8,]),'$end':([1,2,9,],[0,-1,-2,]),'IDENTIFIER':([3,6,10,13,16,17,],[4,8,11,15,18,19,]),'LBRACE':([4,20,],[5,23,]),'RBRACE':([7,22,24,25,27,28,31,],[9,-3,27,-6,-5,-7,-8,]),'LPAREN':([8,26,],[10,29,]),'COLON':([11,14,],[13,16,]),'RPAREN':([12,21,30,],[14,-4,31,]),'LBRACKET':([15,],[17,]),'EQUALS':([18,],[20,]),'RBRACKET':([19,],[21,]),'STRING':([29,],[30,]),}
+_lr_action_items = {'IDENTIFIER':([0,5,8,9,10,11,12,],[4,14,14,14,14,14,4,]),'LPAREN':([0,5,8,9,10,11,12,],[5,5,5,5,5,5,5,]),'NUMBER':([0,5,8,9,10,11,12,],[6,6,6,6,6,6,6,]),'$end':([1,2,7,21,],[0,-1,-2,-3,]),'SEMICOLON':([3,4,6,14,15,16,17,18,20,],[7,-10,-9,-10,-4,-5,-6,-7,-8,]),'PLUS':([3,4,6,13,14,15,16,17,18,20,],[8,-10,-9,8,-10,-4,-5,-6,-7,-8,]),'MINUS':([3,4,6,13,14,15,16,17,18,20,],[9,-10,-9,9,-10,-4,-5,-6,-7,-8,]),'TIMES':([3,4,6,13,14,15,16,17,18,20,],[10,-10,-9,10,-10,10,10,-6,-7,-8,]),'DIVIDE':([3,4,6,13,14,15,16,17,18,20,],[11,-10,-9,11,-10,11,11,-6,-7,-8,]),'LBRACE':([4,],[12,]),'RPAREN':([6,13,14,15,16,17,18,20,],[-9,20,-10,-4,-5,-6,-7,-8,]),'RBRACE':([7,19,21,],[-2,21,-3,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'program':([0,],[1,]),'object_declaration':([0,],[2,]),'method_declaration':([5,],[7,]),'args':([10,],[12,]),'block':([20,],[22,]),'statements':([23,],[24,]),'statement':([23,24,],[25,28,]),}
+_lr_goto_items = {'program':([0,],[1,]),'statement':([0,12,],[2,19,]),'expression':([0,5,8,9,10,11,12,],[3,13,15,16,17,18,3,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -27,12 +27,14 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> program","S'",1,None,None,None),
-  ('program -> object_declaration','program',1,'p_program','syntax_analyzer.py',12),
-  ('object_declaration -> RESERVED IDENTIFIER LBRACE method_declaration RBRACE','object_declaration',5,'p_object_declaration','syntax_analyzer.py',16),
-  ('method_declaration -> RESERVED IDENTIFIER LPAREN args RPAREN COLON IDENTIFIER EQUALS block','method_declaration',9,'p_method_declaration','syntax_analyzer.py',20),
-  ('args -> IDENTIFIER COLON IDENTIFIER LBRACKET IDENTIFIER RBRACKET','args',6,'p_args','syntax_analyzer.py',24),
-  ('block -> LBRACE statements RBRACE','block',3,'p_block','syntax_analyzer.py',28),
-  ('statements -> statement','statements',1,'p_statements','syntax_analyzer.py',32),
-  ('statements -> statements statement','statements',2,'p_statements','syntax_analyzer.py',33),
-  ('statement -> RESERVED LPAREN STRING RPAREN','statement',4,'p_statement','syntax_analyzer.py',40),
+  ('program -> statement','program',1,'p_program','syntax_analyzer.py',12),
+  ('statement -> expression SEMICOLON','statement',2,'p_statement','syntax_analyzer.py',16),
+  ('statement -> IDENTIFIER LBRACE statement RBRACE','statement',4,'p_statement','syntax_analyzer.py',17),
+  ('expression -> expression PLUS expression','expression',3,'p_expression_binop','syntax_analyzer.py',21),
+  ('expression -> expression MINUS expression','expression',3,'p_expression_binop','syntax_analyzer.py',22),
+  ('expression -> expression TIMES expression','expression',3,'p_expression_binop','syntax_analyzer.py',23),
+  ('expression -> expression DIVIDE expression','expression',3,'p_expression_binop','syntax_analyzer.py',24),
+  ('expression -> LPAREN expression RPAREN','expression',3,'p_expression_group','syntax_analyzer.py',28),
+  ('expression -> NUMBER','expression',1,'p_expression_number','syntax_analyzer.py',32),
+  ('expression -> IDENTIFIER','expression',1,'p_expression_identifier','syntax_analyzer.py',36),
 ]
